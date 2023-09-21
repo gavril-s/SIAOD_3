@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c++,visualstudiocode,visualstudio,notepadpp,git
-# Edit at https://www.toptal.com/developers/gitignore?templates=c++,visualstudiocode,visualstudio,notepadpp,git
+# Created by https://www.toptal.com/developers/gitignore/api/c++,visualstudiocode,notepadpp,visualstudio,git,microsoftoffice
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,visualstudiocode,notepadpp,visualstudio,git,microsoftoffice
 
 ### C++ ###
 # Prerequisites
@@ -49,8 +49,27 @@
 *_BASE_*.txt
 *_LOCAL_*.txt
 *_REMOTE_*.txt
-### SIAOD_2 ###
-.vscode/
+
+### MicrosoftOffice ###
+*.tmp
+
+# Word temporary
+~$*.doc*
+
+# Word Auto Backup File
+Backup of *.doc*
+
+# Excel temporary
+~$*.xls*
+
+# Excel Backup File
+*.xlk
+
+# PowerPoint temporary
+~$*.ppt*
+
+# Visio autosave temporary files
+*.~vsd*
 
 ### NotepadPP ###
 # Notepad++ backups #
@@ -162,7 +181,6 @@ StyleCopReport.xml
 *.tlb
 *.tli
 *.tlh
-*.tmp
 *.tmp_proj
 *_wpftmp.csproj
 *.log
@@ -468,4 +486,4 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/c++,visualstudiocode,visualstudio,notepadpp,git
+# End of https://www.toptal.com/developers/gitignore/api/c++,visualstudiocode,notepadpp,visualstudio,git,microsoftoffice
