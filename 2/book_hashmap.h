@@ -31,10 +31,10 @@ private:
     size_t hash(const book& b) const;
 public:
     book_hashmap();
-    size_t insert(const book& b);
+    int insert(const book& b);
     bool remove_by_isbn(ull isbn);
     bool remove_by_index(size_t index);
-    size_t search(ull isbn) const;
+    int search(ull isbn) const;
     friend std::ostream& operator<<(std::ostream& os, const book_hashmap& bh);
 };
 
