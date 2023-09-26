@@ -37,9 +37,15 @@ std::ostream& operator<<(std::ostream& os, const book& b)
     return os;
 }
 
+std::istream& operator>>(std::istream& is, book& b)
+{
+    is >> b.isbn >> b.author >> b.name;
+    return is;
+}
+
 size_t book_hashmap::hash(ull isbn) const
 {
-    return isbn % HASHMAP_SIZE;
+    return isbn % size;
 }
 
 size_t book_hashmap::hash(const book& b) const
@@ -47,23 +53,89 @@ size_t book_hashmap::hash(const book& b) const
     return hash(b.get_isbn());
 }
 
+void book_hashmap::resize()
+{
+    size_t old_size = size;
+    book** old_books = new book*[old_size];
+    for (size_t i = 0; i < old_size; ++i)
+    {
+        if (books[i] != nullptr)
+        {
+            old_books[i] = new book(*books[i]);
+        }
+        else
+        {
+            old_books[i] = nullptr;
+        }
+    }
+
+    delete[] books;
+    size = (size_t)(size * capacity);
+    books = new book*[size];
+    for (size_t i = 0; i < size; ++i)
+    {
+        books[i] = nullptr;
+    }
+
+    for (size_t i = 0; i < old_size; ++i)
+    {
+        if (old_books[i] != nullptr)
+        {
+            insert(*old_books[i]);
+        }
+    }
+    delete[] old_books;
+}
+
 book_hashmap::book_hashmap()
 {
-    for (size_t i = 0; i < HASHMAP_SIZE; ++i)
+    size = initial_size;
+    books = new book*[size];
+    for (size_t i = 0; i < size; ++i)
     {
         books[i] = nullptr;
     }
 }
 
-int book_hashmap::insert(const book& b)
+size_t book_hashmap::hashmap_size() const
+{
+    return size;
+}
+
+book* book_hashmap::get(size_t index) const
+{
+    if (index >= size)
+    {
+        return nullptr;
+    }
+
+    return books[index];
+}
+
+int book_hashmap::search(ull isbn) const
+{
+    size_t index = hash(isbn);
+    for (; index < size; ++index)
+    {
+        if (books[index] != nullptr && books[index]->get_isbn() == isbn)
+        {
+            return index;
+        }
+    }
+
+    return -1;
+}
+
+size_t book_hashmap::insert(const book& b)
 {
     size_t index = hash(b);
     while (books[index] != nullptr)
     {
         ++index;
-        if (index >= HASHMAP_SIZE)
+        if (index >= size)
         {
-            return -1;
+            resize();
+            return insert(b);
         }
     }
 
@@ -86,7 +158,7 @@ bool book_hashmap::remove_by_isbn(ull isbn)
 
 bool book_hashmap::remove_by_index(size_t index)
 {
-    if (index >= HASHMAP_SIZE || books[index] == nullptr)
+    if (index >= size || books[index] == nullptr)
     {
         return false;
     }
@@ -95,23 +167,9 @@ bool book_hashmap::remove_by_index(size_t index)
     return true;
 }
 
-int book_hashmap::search(ull isbn) const
-{
-    size_t index = hash(isbn);
-    for (; index < HASHMAP_SIZE; ++index)
-    {
-        if (books[index] != nullptr && books[index]->get_isbn() == isbn)
-        {
-            return index;
-        }
-    }
-
-    return -1;
-}
-
 std::ostream& operator<<(std::ostream& os, const book_hashmap& bh)
 {
-    for (size_t i = 0; i < HASHMAP_SIZE; i++)
+    for (size_t i = 0; i < bh.size; ++i)
     {
         if (bh.books[i] != nullptr)
         {
