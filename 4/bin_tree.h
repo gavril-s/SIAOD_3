@@ -4,12 +4,17 @@
 #include <vector>
 #include <string>
 
+// Вершина бинарного дерева поиска
 template <typename T>
 struct bin_tree_node
 {
+    // Значение вершины
     T val_ = T();
+    // Родительская вершина
     bin_tree_node* parent_      = nullptr;
+    // Левая дочерняя вершина
     bin_tree_node* left_child_  = nullptr;
+    // Правая дочерняя вершина
     bin_tree_node* right_child_ = nullptr;
 
     bin_tree_node(T val,
@@ -20,36 +25,55 @@ struct bin_tree_node
       right_child_(right_child) {}
 };
 
+// Бинарное дерево поиска
 template <typename T>
 class bin_tree
 {
 private:
+    // Корень дерево
     bin_tree_node<T>* root_ = nullptr;
 
+    // Функция, удаляющая поддерево рекурсивно (вызывается из деструктора)
     void del_tree(bin_tree_node<T>* node);
 
+    // Вставка нового значения в поддерево
     bin_tree_node<T>* insert(bin_tree_node<T>* parent, T val);
+    // Вывод прямого обхода поддерева
     void print_inorder(bin_tree_node<T>* node);
+    // Вывод симметричного обхода поддерева
     void print_preorder(bin_tree_node<T>* node);
-    int depth(bin_tree_node<T>* node, T val);
+    // Длина пути от заданной вершины до заданного значения
+    int depth(bin_tree_node<T>* node, T val, int current_depth = 0);
+    // Высота поддерева (от заданной вершины)
     size_t height(bin_tree_node<T>* node);
 
+    // Сумма значений всех вершин поддерева
     T sum(bin_tree_node<T>* node);
+    // Подсчёт вершин в поддереве
     size_t count(bin_tree_node<T>* node);
 
 public:
+    // Деструктор
     ~bin_tree();
 
+    // Вставка нового значения в дерево
     bin_tree_node<T>* insert(T val);
+    // Вывод прямого обхода дерева
     void print_inorder();
+    // Вывод симметричного обхода дерева
     void print_preorder();
+    // Длина пути от корня до заданного значения
     int depth(T val);
+    // Высота дерева
     size_t height();
 
+    // Среднее арифметическое по всем вершинам
     T average();
-    void print(size_t value_length = 3);
+    // Вывод дерева (форматированный)
+    void print(size_t value_length = 0);
 };
 
+// Функция, удаляющая поддерево рекурсивно (вызывается из деструктора)
 template <typename T>
 void bin_tree<T>::del_tree(bin_tree_node<T>* node)
 {
@@ -59,6 +83,7 @@ void bin_tree<T>::del_tree(bin_tree_node<T>* node)
     delete node;
 }
 
+// Вставка нового значения в поддерево
 template <typename T>
 bin_tree_node<T>* bin_tree<T>::insert(bin_tree_node<T>* parent, T val)
 {
@@ -100,46 +125,50 @@ bin_tree_node<T>* bin_tree<T>::insert(bin_tree_node<T>* parent, T val)
     }
 }
 
+// Вывод прямого обхода поддерева
 template <typename T>
 void bin_tree<T>::print_inorder(bin_tree_node<T>* node)
 {
     if (node == nullptr) return;
     print_inorder(node->left_child_);
-    std::cout << node->val_ << std::endl;
+    std::cout << node->val_ << ' ';
     print_inorder(node->right_child_);
 }
 
+// Вывод симметричного обхода поддерева
 template <typename T>
 void bin_tree<T>::print_preorder(bin_tree_node<T>* node)
 {
     if (node == nullptr) return;
-    std::cout << node->val_ << std::endl;
+    std::cout << node->val_ << ' ';
     print_preorder(node->left_child_);   
     print_preorder(node->right_child_);
 }
 
+// Длина пути от заданной вершины до заданного значения
 template <typename T>
-int depth(bin_tree_node<T>* node, T val)
+int bin_tree<T>::depth(bin_tree_node<T>* node, T val, int current_depth)
 {
     if (node == nullptr)
     {
         return -1;
     }
 
-    if (node->val_ == val)
+    if (val == node->val_)
     {
-        return 0;
+        return current_depth;
     }    
-    else if (node->val < val)
+    else if (val < node->val_)
     {
-        return 1 + depth(node->left_child_, val);
+        return depth(node->left_child_, val, current_depth + 1);
     }
     else
     {
-        return 1 + depth(node->right_child_, val);
+        return depth(node->right_child_, val, current_depth + 1);
     }
 }
 
+// Высота поддерева (от заданной вершины)
 template <typename T>
 size_t bin_tree<T>::height(bin_tree_node<T>* node)
 {
@@ -154,6 +183,7 @@ size_t bin_tree<T>::height(bin_tree_node<T>* node)
     );
 }
 
+// Сумма значений всех вершин поддерева
 template <typename T>
 T bin_tree<T>::sum(bin_tree_node<T>* node)
 {
@@ -165,6 +195,7 @@ T bin_tree<T>::sum(bin_tree_node<T>* node)
     return node->val_ + sum(node->left_child_) + sum(node->right_child_);
 }
 
+// Подсчёт вершин в поддереве
 template <typename T>
 size_t bin_tree<T>::count(bin_tree_node<T>* node)
 {
@@ -176,48 +207,56 @@ size_t bin_tree<T>::count(bin_tree_node<T>* node)
     return 1 + count(node->left_child_) + count(node->right_child_);
 }
 
+// Деструктор
 template <typename T>
 bin_tree<T>::~bin_tree()
 {
     del_tree(root_);
 }
 
+// Вставка нового значения в дерево
 template <typename T>
 bin_tree_node<T>* bin_tree<T>::insert(T val)
 {
     return insert(root_, val);
 }
 
+// Вывод прямого обхода дерева
 template <typename T>
 void bin_tree<T>::print_inorder()
 {
     print_inorder(root_);
 }
 
+// Вывод симметричного обхода дерева
 template <typename T>
 void bin_tree<T>::print_preorder()
 {
     print_preorder(root_);
 }
 
+// Среднее арифметическое по всем вершинам
 template <typename T>
 T bin_tree<T>::average()
 {
     return sum(root_) / count(root_);
 }
 
+// Длина пути от корня до заданного значения
 template <typename T>
 int bin_tree<T>::depth(T val)
 {
     return depth(root_, val);
 }
 
+// Высота дерева
 template <typename T>
 size_t bin_tree<T>::height()
 {
     return height(root_);
 }
 
+// Вывод дерева (форматированный)
 template <typename T>
 void bin_tree<T>::print(size_t value_length)
 {
