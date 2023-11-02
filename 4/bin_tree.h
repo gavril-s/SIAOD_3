@@ -39,9 +39,9 @@ private:
     // Вставка нового значения в поддерево
     bin_tree_node<T>* insert(bin_tree_node<T>* parent, T val);
     // Вывод прямого обхода поддерева
-    void print_inorder(bin_tree_node<T>* node);
-    // Вывод симметричного обхода поддерева
     void print_preorder(bin_tree_node<T>* node);
+    // Вывод симметричного обхода поддерева
+    void print_inorder(bin_tree_node<T>* node);
     // Длина пути от заданной вершины до заданного значения
     int depth(bin_tree_node<T>* node, T val, int current_depth = 0);
     // Высота поддерева (от заданной вершины)
@@ -59,9 +59,9 @@ public:
     // Вставка нового значения в дерево
     bin_tree_node<T>* insert(T val);
     // Вывод прямого обхода дерева
-    void print_inorder();
-    // Вывод симметричного обхода дерева
     void print_preorder();
+    // Вывод симметричного обхода дерева
+    void print_inorder();
     // Длина пути от корня до заданного значения
     int depth(T val);
     // Высота дерева
@@ -127,22 +127,22 @@ bin_tree_node<T>* bin_tree<T>::insert(bin_tree_node<T>* parent, T val)
 
 // Вывод прямого обхода поддерева
 template <typename T>
-void bin_tree<T>::print_inorder(bin_tree_node<T>* node)
-{
-    if (node == nullptr) return;
-    print_inorder(node->left_child_);
-    std::cout << node->val_ << ' ';
-    print_inorder(node->right_child_);
-}
-
-// Вывод симметричного обхода поддерева
-template <typename T>
 void bin_tree<T>::print_preorder(bin_tree_node<T>* node)
 {
     if (node == nullptr) return;
     std::cout << node->val_ << ' ';
     print_preorder(node->left_child_);   
     print_preorder(node->right_child_);
+}
+
+// Вывод симметричного обхода поддерева
+template <typename T>
+void bin_tree<T>::print_inorder(bin_tree_node<T>* node)
+{
+    if (node == nullptr) return;
+    print_inorder(node->left_child_);
+    std::cout << node->val_ << ' ';
+    print_inorder(node->right_child_);
 }
 
 // Длина пути от заданной вершины до заданного значения
@@ -223,16 +223,16 @@ bin_tree_node<T>* bin_tree<T>::insert(T val)
 
 // Вывод прямого обхода дерева
 template <typename T>
-void bin_tree<T>::print_inorder()
+void bin_tree<T>::print_preorder()
 {
-    print_inorder(root_);
+    print_preorder(root_);
 }
 
 // Вывод симметричного обхода дерева
 template <typename T>
-void bin_tree<T>::print_preorder()
+void bin_tree<T>::print_inorder()
 {
-    print_preorder(root_);
+    print_inorder(root_);
 }
 
 // Среднее арифметическое по всем вершинам
